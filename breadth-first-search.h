@@ -15,6 +15,10 @@ using std::cout;
 using std::endl;
 #include <string>
 using std::string;
+#include <queue>
+using std::queue;
+#include <algorithm>
+using std::sort;
 
 #include "ostream.h"
 
@@ -87,7 +91,7 @@ map<T, pair<long, long>> explore_dfs(const map<T, vector<T>> adjList) {
 	return results;
 }
 
-size_t clk = 0;
+
 template<typename T>
 void follow_bfs(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, queue<T> to_visit, const map<T, vector<T>> adjList, const T start) {
 	if (visited->find(start) != visited->end())
@@ -118,15 +122,15 @@ map<T, pair<long, long>> explore_bfs(const map<T, vector<T>> adjList) {
 		for (const auto connection : node.second)
 			to_visit.push(connection);
 
-	const auto next; = *to_visit.front;
-	while (next = *to_visit.front) {
+	auto next = to_visit.front();
+	while ((next = to_visit.front())) {
 		to_visit.pop();
 
 	}
-	for (const auto node : to_visit) {
+	// for (const auto node : to_visit) {
 
-	}
-	follow_bfs(&pre, &post, &visited, &to_visit, adjList, *adjList.begin().second);
+	// }
+	// follow_bfs(&pre, &post, &visited, &to_visit, adjList, *adjList.begin().second);
 	clk = 0;
 
 	map<T, pair<long, long>> results;
@@ -219,7 +223,7 @@ void check_dfs_results_for_buckets(const map<size_t, pair<long, long>> explored)
 	for (const auto pair : explored)
 		sorted.push_back(pair);
 
-	std::sort(sorted.begin(), sorted.end(), [](pair<size_t, pair<long, long>> a, pair<size_t, pair<long, long>> b) {
+	sort(sorted.begin(), sorted.end(), [](pair<size_t, pair<long, long>> a, pair<size_t, pair<long, long>> b) {
         return a.second.first < b.second.first;
     });
 

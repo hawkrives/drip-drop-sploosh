@@ -1,5 +1,7 @@
 #include <fstream>
 using std::ifstream;
+#include <string>
+using std::string;
 #include "breadth-first-search.h"
 #include "common.h"
 
@@ -15,6 +17,7 @@ int main(int argc, const char* argv[]) {
 	string filename = "dimacs.txt";
 	if (argc == 2)
 		filename = argv[1];
+
 	ifstream f(filename);
 	if (!f.good()) {
 		std::cerr << "Error reading " << filename << std::endl;
@@ -38,13 +41,16 @@ int main(int argc, const char* argv[]) {
 
 	cout << "creating adjacencies list" << endl;
 
-	map<unsigned long, vector<unsigned long>> adjList;
-	for (size_t i = 0; i < numNodes; i++)
-		adjList.insert({i, {}});
+	map<string, vector<string>> adjList;
+	// map<unsigned long, vector<unsigned long>> adjList;
+	// for (auto i = 0; i < numNodes; i++)
+		// adjList.insert({i, {}});
 
 	for (const auto vertex : vertices) {
-		const unsigned long fromVertex = stoul(vertex.at(1));
-		const unsigned long toVertex = stoul(vertex.at(2));
+		// const unsigned long fromVertex = stoul(vertex.at(1));
+		// const unsigned long toVertex = stoul(vertex.at(2));
+		const string fromVertex = vertex.at(1);
+		const string toVertex = vertex.at(2);
 
 		auto search = adjList.find(fromVertex);
 		if (search != adjList.end()) {
@@ -61,14 +67,15 @@ int main(int argc, const char* argv[]) {
 	print_line();
 
 	print_header("DFS-ing the entire graph");
-	map<size_t, pair<long, long>> explored_dfs = explore_dfs(adjList);
+	string start = "S";
+	map<string, pair<long, long>> explored_dfs = walk_dfs(adjList, start);
 	print_dfs_results(explored_dfs);
 
-	print_line();
+	// print_line();
 
-	print_header("BFS-ing the entire graph");
-	map<size_t, pair<long, long>> explored_bfs = explore_bfs(adjList);
-	print_bfs_results(explored_bfs);
+	// print_header("BFS-ing the entire graph");
+	// map<size_t, pair<long, long>> explored_bfs = explore_bfs(adjList);
+	// print_bfs_results(explored_bfs);
 
 	// print_line();
 

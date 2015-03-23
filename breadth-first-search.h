@@ -44,7 +44,7 @@ void follow(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const ma
 
 
 template<typename T>
-map<T, pair<long, long>> walk(const map<T, vector<T>> adjList, T start) {
+map<T, pair<long, long>> walk_dfs(const map<T, vector<T>> adjList, T start) {
 	map<T, size_t> pre;
 	map<T, size_t> post;
 	set<T> visited;
@@ -116,35 +116,30 @@ map<T, pair<long, long>> explore_bfs(const map<T, vector<T>> adjList) {
 	map<T, size_t> post;
 
 	set<T> visited;
-	queue<T> to_visit;
+	set<T> to_visit;
 
 	for (const auto node : adjList)
 		for (const auto connection : node.second)
 			to_visit.push(connection);
 
-	auto next = to_visit.front();
-	while ((next = to_visit.front())) {
-		to_visit.pop();
-
-	}
 	// for (const auto node : to_visit) {
 
 	// }
 	// follow_bfs(&pre, &post, &visited, &to_visit, adjList, *adjList.begin().second);
-	clk = 0;
+	// clk = 0;
 
-	map<T, pair<long, long>> results;
-	for (const auto point : visited) {
-		auto preSearch = pre.find(point);
-		auto postSearch = post.find(point);
+	// map<T, pair<long, long>> results;
+	// for (const auto point : visited) {
+	// 	auto preSearch = pre.find(point);
+	// 	auto postSearch = post.find(point);
 
-		results.insert({point, {
-			(preSearch != pre.end()) ? static_cast<long>(preSearch->second) : -1,
-			(postSearch != post.end()) ? static_cast<long>(postSearch->second) : -1,
-		}});
-	}
+	// 	results.insert({point, {
+	// 		(preSearch != pre.end()) ? static_cast<long>(preSearch->second) : -1,
+	// 		(postSearch != post.end()) ? static_cast<long>(postSearch->second) : -1,
+	// 	}});
+	// }
 
-	return results;
+	// return results;
 }
 
 
@@ -179,19 +174,21 @@ size_t count_vertices(const map<T, vector<T>> adjList) {
 	return seen.size();
 }
 
-void print_dimacs(const map<size_t, vector<size_t>> graph) {
+template<typename T>
+void print_dimacs(const map<T, vector<T>> graph) {
 	cout << "p\t" << "edge\t" << count_vertices(graph) << "\t" << count_edges(graph) << endl;
 	for (const auto fromVertex : graph)
 		for (const auto toVertex : fromVertex.second)
 			cout << "e\t" << fromVertex.first << "\t" << toVertex << endl;
 }
 
-void print_dfs_results(const map<size_t, pair<long, long>> explored) {
-	vector<pair<size_t, pair<long, long>>> sorted;
+template<typename T>
+void print_dfs_results(const map<T, pair<long, long>> explored) {
+	vector<pair<T, pair<long, long>>> sorted;
 	for (const auto pair : explored)
 		sorted.push_back(pair);
 
-	std::sort(sorted.begin(), sorted.end(), [](pair<size_t, pair<long, long>> a, pair<size_t, pair<long, long>> b) {
+	std::sort(sorted.begin(), sorted.end(), [](pair<T, pair<long, long>> a, pair<T, pair<long, long>> b) {
         return a.second.first < b.second.first;
     });
 

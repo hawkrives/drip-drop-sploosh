@@ -25,10 +25,10 @@ using std::stack;
 #include "ostream.h"
 
 
-// bool isDestination(string possibility) {
-// 	// cout << possibility << endl;
-// 	return (possibility.at(0) == '2' || possibility.at(1) == '2');
-// }
+bool isDestination(string possibility) {
+	// cout << possibility << endl;
+	return (possibility.at(0) == '2' || possibility.at(1) == '2');
+}
 
 size_t clk = 0;
 template<typename T>
@@ -43,17 +43,17 @@ bool follow(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const ma
 
 	pre->insert({start, clk++});
 	bool go_on;
-	// if (!isDestination(start)) {
+	if (!isDestination(start)) {
 		for (const auto point : search->second) {
 			go_on = follow(pre, post, visited, adjList, point);
 			if (!go_on) {
 				break;
 			}
 		}
-	// }
-	// else {
-	// 	cout << "destination! " << start << endl;
-	// }
+	}
+	else {
+		// cout << "destination! " << start << endl;
+	}
 	post->insert({start, clk++});
 	return go_on;
 }
@@ -128,8 +128,8 @@ map<T, long> walk_bfs(const map<T, set<T>> adjList, T start) {
 		q.pop_front();
 		visited.insert(current);
 
-		// if (isDestination(current))
-		// 	break;
+		if (isDestination(current))
+			break;
 
 		auto search = adjList.find(current);
 		if (search != adjList.end()) {
@@ -209,19 +209,20 @@ void print_dfs_results(const map<T, pair<long, long>> explored) {
 
 template<typename T>
 void print_bfs_results(const map<T, long> explored) {
-	// vector<pair<size_t, pair<long, long>>> sorted;
-	// for (const auto pair : explored)
-	// 	sorted.push_back(pair);
-	//
-	// std::sort(sorted.begin(), sorted.end(), [](pair<size_t, pair<long, long>> a, pair<size_t, pair<long, long>> b) {
-    //     return a.second.first < b.second.first;
-    // });
-
-	// cout << "vertex: (pre, post)" << endl;
-	cout << explored << endl;
-	// for (const auto point : explored) {
-	// 	cout << point.first << ": " << point.second << endl;
-	// }
+	pair<T, long> min;
+	bool hasMin = false;
+	for (const auto endpoint : explored) {
+		if (isDestination(endpoint.first)) {
+			if (hasMin && min.second < endpoint.second) {
+				min = endpoint;
+			}
+			else if (!hasMin) {
+				min = endpoint;
+				hasMin = true;
+			}
+		}
+	}
+	cout << "endpoint: " << min.first << " | distance: " << min.second << endl;
 }
 
 void check_dfs_results_for_buckets(const map<size_t, pair<long, long>> explored) {

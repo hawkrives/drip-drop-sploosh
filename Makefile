@@ -18,6 +18,8 @@ bfs.out: bfs.cpp breadth-first-search.h common.h ostream.h utilities.h
 bfs: bfs.out
 	./$< bfs-test.col
 
+pour: bfs.out
+	./$< drippy.col
 
 clean:
 	$(RM) *.out *.o

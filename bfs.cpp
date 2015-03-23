@@ -57,22 +57,22 @@ int main(int argc, const char* argv[]) {
 			adjList.insert({fromVertex, {toVertex}});
 		}
 	}
-	for (const auto vertex : adjList) {
-		for (const auto to : vertex.second) {
-			auto search = adjList.find(to);
-			if (search != adjList.end()) {
-				search->second.insert(vertex.first);
-			}
-			else {
-				adjList.insert({to, {vertex.first}});
-			}
-		}
-	}
+	// for (const auto vertex : adjList) {
+	// 	for (const auto to : vertex.second) {
+	// 		auto search = adjList.find(to);
+	// 		if (search != adjList.end()) {
+	// 			search->second.insert(vertex.first);
+	// 		}
+	// 		else {
+	// 			adjList.insert({to, {vertex.first}});
+	// 		}
+	// 	}
+	// }
 
-	print_header("printing dimacs file");
-	print_dimacs(adjList);
+	// print_header("printing dimacs file");
+	// print_dimacs(adjList);
 
-	string start = "S";
+	string start = "470";
 
 	print_header("DFS-ing the entire graph");
 	map<string, pair<long, long>> explored_dfs = walk_dfs(adjList, start);

@@ -1,7 +1,7 @@
 # drip-drop-sploosh
 Hw16 for Algorithms and Data Structures
 
-A C++ attempt at the "Pouring water" problem using  in problem 3.8 of Algorithms by S. Dasgupta, C.H. Papadimitriou, and U.V. Vazirani.
+A C++ attempt at the "Pouring water" problem with modifications using breadth-first search.
 
 Built by [hawkrives](https://www.github.com/hawkrives) and [drewvolz](https://www.github.com/drewvolz)
 

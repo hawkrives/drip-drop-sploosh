@@ -26,28 +26,19 @@ using std::sort;
 size_t clk = 0;
 template<typename T>
 void follow(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const map<T, set<T>> adjList, const T start) {
-	// cout << start << " visited " << *visited << endl;
 	// if start is in visited
-	if (visited->find(start) != visited->end()) {
-		// cout << start << " is in " << *visited << endl;
+	if (visited->find(start) != visited->end())
 		return;
-	}
 
 	visited->insert(start);
 
 	auto search = adjList.find(start);
-	// if (search == adjList.end()) {
-	// 	cout << start << " is not in " << *adjList << endl;
-	// 	return;
-	// }
 
 	pre->insert({start, clk++});
-	// cout << start << " pre " << *pre << endl;
 	for (const auto point : search->second) {
 		follow(pre, post, visited, adjList, point);
 	}
 	post->insert({start, clk++});
-	// cout << start << " post " << *post << endl;
 }
 
 
@@ -103,53 +94,71 @@ map<T, pair<long, long>> explore_dfs(const map<T, set<T>> adjList) {
 
 
 template<typename T>
-void follow_bfs(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, queue<T> to_visit, const map<T, set<T>> adjList, const T start) {
+void follow_bfs(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const map<T, set<T>> adjList, const T start) {
+	// if start is in visited
 	if (visited->find(start) != visited->end())
 		return;
 
 	visited->insert(start);
 
 	auto search = adjList.find(start);
-	if (search == adjList.end())
-		return;
 
 	pre->insert({start, clk++});
 	for (const auto point : search->second) {
-		follow_bfs(pre, post, visited, adjList, point);
+		follow(pre, post, visited, adjList, point);
 	}
 	post->insert({start, clk++});
 }
+
+
+template<typename T>
+map<T, pair<long, long>> walk_bfs(const map<T, set<T>> adjList, T start) {
+	map<T, size_t> pre;
+	map<T, size_t> post;
+	set<T> visited;
+
+	// cout << adjList << endl;
+
+	follow(&pre, &post, &visited, adjList, start);
+	clk = 0;
+
+	map<T, pair<long, long>> results;
+	for (const auto point : visited) {
+		auto preSearch = pre.find(point);
+		auto postSearch = post.find(point);
+
+		results.insert({point, {
+			(preSearch != pre.end()) ? preSearch->second : -1,
+			(postSearch != post.end()) ? postSearch->second : -1,
+		}});
+	}
+
+	return results;
+}
+
 
 template<typename T>
 map<T, pair<long, long>> explore_bfs(const map<T, set<T>> adjList) {
 	map<T, size_t> pre;
 	map<T, size_t> post;
-
 	set<T> visited;
-	set<T> to_visit;
 
-	for (const auto node : adjList)
-		for (const auto connection : node.second)
-			to_visit.push(connection);
+	for (const auto pair : adjList)
+		follow(&pre, &post, &visited, adjList, pair.first);
+	clk = 0;
 
-	// for (const auto node : to_visit) {
+	map<T, pair<long, long>> results;
+	for (const auto point : visited) {
+		auto preSearch = pre.find(point);
+		auto postSearch = post.find(point);
 
-	// }
-	// follow_bfs(&pre, &post, &visited, &to_visit, adjList, *adjList.begin().second);
-	// clk = 0;
+		results.insert({point, {
+			(preSearch != pre.end()) ? static_cast<long>(preSearch->second) : -1,
+			(postSearch != post.end()) ? static_cast<long>(postSearch->second) : -1,
+		}});
+	}
 
-	// map<T, pair<long, long>> results;
-	// for (const auto point : visited) {
-	// 	auto preSearch = pre.find(point);
-	// 	auto postSearch = post.find(point);
-
-	// 	results.insert({point, {
-	// 		(preSearch != pre.end()) ? static_cast<long>(preSearch->second) : -1,
-	// 		(postSearch != post.end()) ? static_cast<long>(postSearch->second) : -1,
-	// 	}});
-	// }
-
-	// return results;
+	return results;
 }
 
 
@@ -166,21 +175,6 @@ size_t count_edges(const map<T, set<T>> adjList) {
 		totalEdges += node.second.size();
 	}
 	return totalEdges;
-	// return std::accumulate(adjList.begin(), adjList.end(), 0, sizeOfSet);
-	// set<T> visited;
-	// map<T, size_t> pre;
-	// map<T, size_t> post;
-	//
-	// for (const auto pair : adjList) {
-	// 	if (pair.second.size()) {
-	// 		follow(&pre, &post, &visited, adjList, pair.first);
-	// 		clk = 0;
-	// 	}
-	// }
-	//
-	// auto size = visited.size();
-	//
-	// return size;
 }
 
 template<typename T>

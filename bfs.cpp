@@ -28,7 +28,7 @@ int main(int argc, const char* argv[]) {
 
 	const vector<string> dimacs = split(s, " ");
 	const unsigned long numNodes = stoul(dimacs.at(2));
-	// const unsigned long numEdges = stoul(dimacs.at(3));
+	const unsigned long numEdges = stoul(dimacs.at(3));
 
 	vector<vector<string>> vertices;
 	vertices.reserve(numNodes);
@@ -41,7 +41,7 @@ int main(int argc, const char* argv[]) {
 
 	cout << "creating adjacencies list" << endl;
 
-	map<string, vector<string>> adjList;
+	map<string, set<string>> adjList;
 	// map<unsigned long, vector<unsigned long>> adjList;
 	// for (auto i = 0; i < numNodes; i++)
 		// adjList.insert({i, {}});
@@ -54,15 +54,26 @@ int main(int argc, const char* argv[]) {
 
 		auto search = adjList.find(fromVertex);
 		if (search != adjList.end()) {
-			search->second.push_back(toVertex);
+			search->second.insert(toVertex);
 		}
 		else {
 			adjList.insert({fromVertex, {toVertex}});
 		}
 	}
+	for (const auto vertex : adjList) {
+		for (const auto to : vertex.second) {
+			auto search = adjList.find(to);
+			if (search != adjList.end()) {
+				search->second.insert(vertex.first);
+			}
+			else {
+				adjList.insert({to, {vertex.first}});
+			}
+		}
+	}
 
 	print_header("printing dimacs file");
-	print_dimacs(adjList);
+	print_dimacs(adjList, numEdges);
 
 	print_line();
 

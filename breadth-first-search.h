@@ -25,29 +25,39 @@ using std::sort;
 
 size_t clk = 0;
 template<typename T>
-void follow(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const map<T, vector<T>> adjList, const T start) {
-	if (visited->find(start) != visited->end())
+void follow(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const map<T, set<T>> adjList, const T start) {
+	// cout << start << " visited " << *visited << endl;
+	// if start is in visited
+	if (visited->find(start) != visited->end()) {
+		// cout << start << " is in " << *visited << endl;
 		return;
+	}
 
 	visited->insert(start);
 
 	auto search = adjList.find(start);
-	if (search == adjList.end())
-		return;
+	// if (search == adjList.end()) {
+	// 	cout << start << " is not in " << *adjList << endl;
+	// 	return;
+	// }
 
 	pre->insert({start, clk++});
+	// cout << start << " pre " << *pre << endl;
 	for (const auto point : search->second) {
 		follow(pre, post, visited, adjList, point);
 	}
 	post->insert({start, clk++});
+	// cout << start << " post " << *post << endl;
 }
 
 
 template<typename T>
-map<T, pair<long, long>> walk_dfs(const map<T, vector<T>> adjList, T start) {
+map<T, pair<long, long>> walk_dfs(const map<T, set<T>> adjList, T start) {
 	map<T, size_t> pre;
 	map<T, size_t> post;
 	set<T> visited;
+
+	// cout << adjList << endl;
 
 	follow(&pre, &post, &visited, adjList, start);
 	clk = 0;
@@ -68,7 +78,7 @@ map<T, pair<long, long>> walk_dfs(const map<T, vector<T>> adjList, T start) {
 
 
 template<typename T>
-map<T, pair<long, long>> explore_dfs(const map<T, vector<T>> adjList) {
+map<T, pair<long, long>> explore_dfs(const map<T, set<T>> adjList) {
 	map<T, size_t> pre;
 	map<T, size_t> post;
 	set<T> visited;
@@ -93,7 +103,7 @@ map<T, pair<long, long>> explore_dfs(const map<T, vector<T>> adjList) {
 
 
 template<typename T>
-void follow_bfs(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, queue<T> to_visit, const map<T, vector<T>> adjList, const T start) {
+void follow_bfs(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, queue<T> to_visit, const map<T, set<T>> adjList, const T start) {
 	if (visited->find(start) != visited->end())
 		return;
 
@@ -111,7 +121,7 @@ void follow_bfs(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, queu
 }
 
 template<typename T>
-map<T, pair<long, long>> explore_bfs(const map<T, vector<T>> adjList) {
+map<T, pair<long, long>> explore_bfs(const map<T, set<T>> adjList) {
 	map<T, size_t> pre;
 	map<T, size_t> post;
 
@@ -144,25 +154,37 @@ map<T, pair<long, long>> explore_bfs(const map<T, vector<T>> adjList) {
 
 
 template<typename T>
-size_t count_edges(const map<T, vector<T>> adjList) {
-	set<T> visited;
-	map<T, size_t> pre;
-	map<T, size_t> post;
+int sizeOfSet(pair<T, set<T>> first, pair<T, set<T>> second) {
+	return first.second.size() + second.second.size();
+}
 
-	for (const auto pair : adjList) {
-		if (pair.second.size()) {
-			follow(&pre, &post, &visited, adjList, pair.first);
-			clk = 0;
-		}
+
+template<typename T>
+size_t count_edges(const map<T, set<T>> adjList) {
+	size_t totalEdges = 0;
+	for (const auto node : adjList) {
+		totalEdges += node.second.size();
 	}
-
-	auto size = visited.size();
-
-	return size;
+	return totalEdges;
+	// return std::accumulate(adjList.begin(), adjList.end(), 0, sizeOfSet);
+	// set<T> visited;
+	// map<T, size_t> pre;
+	// map<T, size_t> post;
+	//
+	// for (const auto pair : adjList) {
+	// 	if (pair.second.size()) {
+	// 		follow(&pre, &post, &visited, adjList, pair.first);
+	// 		clk = 0;
+	// 	}
+	// }
+	//
+	// auto size = visited.size();
+	//
+	// return size;
 }
 
 template<typename T>
-size_t count_vertices(const map<T, vector<T>> adjList) {
+size_t count_vertices(const map<T, set<T>> adjList) {
 	// cout << "counting vertices" << endl;
 	set<T> seen;
 	for (const auto point : adjList) {
@@ -175,7 +197,7 @@ size_t count_vertices(const map<T, vector<T>> adjList) {
 }
 
 template<typename T>
-void print_dimacs(const map<T, vector<T>> graph) {
+void print_dimacs(const map<T, set<T>> graph, size_t numEdges) {
 	cout << "p\t" << "edge\t" << count_vertices(graph) << "\t" << count_edges(graph) << endl;
 	for (const auto fromVertex : graph)
 		for (const auto toVertex : fromVertex.second)

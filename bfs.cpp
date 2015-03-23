@@ -85,6 +85,7 @@ int main(int argc, const char* argv[]) {
 	print_line();
 
 	print_header("BFS-ing the entire graph");
+	start = "S";
 	map<string, long> explored_bfs = walk_bfs(adjList, start);
 	print_bfs_results(explored_bfs);
 

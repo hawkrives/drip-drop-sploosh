@@ -15,8 +15,8 @@ using std::cout;
 using std::endl;
 #include <string>
 using std::string;
-#include <queue>
-using std::queue;
+#include <deque>
+using std::deque;
 #include <algorithm>
 using std::sort;
 
@@ -98,38 +98,39 @@ map<T, long> walk_bfs(const map<T, set<T>> adjList, T start) {
 	map<T, long> distance;
 	set<T> visited;
 
+	cout << start << endl;
+
 	distance.insert({start, 0});
-	queue<T> q;
-	q.push(start);
-	auto next = q.front();
+	deque<T> q;
+	q.push_back(start);
+	auto current = q.front();
 	while (q.size()) {
-		next = q.front();
-		q.pop();
-		for (const auto edge : adjList) {
-			auto search = distance.find(edge.first);
-			if (search != distance.end()){
-				auto val = search->first;
-				q.push(val);
-				try {
-					distance.at(val) = distance.at(edge.first) + 1;
-				} catch(...) {
-					distance.insert({val, distance.at(edge.first) + 1});
+		cout << current << " " << q << endl;
+
+		current = q.front();
+		q.pop_front();
+		visited.insert(current);
+
+		auto search = adjList.find(current);
+		if (search != adjList.end()) {
+			cout << search->second << endl;
+			for (const auto edge : search->second) {
+				if (visited.find(edge) == visited.end()) {
+					q.push_back(edge);
+					try {
+						distance.at(edge) = distance.at(current) + 1;
+					} catch(...) {
+						distance.insert({edge, distance.at(current) + 1});
+					}
+					visited.insert(edge);
 				}
 			}
 		}
 	}
 
-	map<T, long> results;
-	for (const auto point : visited) {
-		auto distanceSearch = distance.find(point);
+	cout << distance << endl;
 
-		results.insert({
-			point,
-			(distanceSearch != distance.end()) ? distanceSearch->second : -1,
-		});
-	}
-
-	return results;
+	return distance;
 }
 
 ////////

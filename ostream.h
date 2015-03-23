@@ -43,6 +43,19 @@ ostream& operator<< (ostream& out, const set<T>& s) {
 	return out;
 }
 
+template<typename T>
+ostream& operator<< (ostream& out, const deque<T>& s) {
+	out << '[';
+	char comma[3] = {'\0', ' ', '\0'};
+	for (const auto& item : s) {
+		out << comma;
+		out << item;
+		comma[0] = ',';
+	}
+	out << ']';
+	return out;
+}
+
 
 template<typename T, typename U>
 ostream& operator<< (ostream& out, const map<T, U>& map) {

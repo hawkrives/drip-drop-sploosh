@@ -98,14 +98,14 @@ map<T, long> walk_bfs(const map<T, set<T>> adjList, T start) {
 	map<T, long> distance;
 	set<T> visited;
 
-	cout << start << endl;
+	cout << "start: " << start << endl;
 
 	distance.insert({start, 0});
 	deque<T> q;
 	q.push_back(start);
 	auto current = q.front();
 	while (q.size()) {
-		cout << current << " " << q << endl;
+		// cout << current << " " << q << endl;
 
 		current = q.front();
 		q.pop_front();
@@ -113,13 +113,12 @@ map<T, long> walk_bfs(const map<T, set<T>> adjList, T start) {
 
 		auto search = adjList.find(current);
 		if (search != adjList.end()) {
-			cout << search->second << endl;
+			// cout << search->second << endl;
 			for (const auto edge : search->second) {
 				if (visited.find(edge) == visited.end()) {
 					q.push_back(edge);
-					try {
-						distance.at(edge) = distance.at(current) + 1;
-					} catch(...) {
+					auto edgeInDistance = distance.find(edge);
+					if (edgeInDistance == distance.end()) {
 						distance.insert({edge, distance.at(current) + 1});
 					}
 					visited.insert(edge);

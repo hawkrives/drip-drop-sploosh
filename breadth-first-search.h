@@ -23,22 +23,37 @@ using std::sort;
 #include "ostream.h"
 
 
+bool isDestination(string possibility) {
+	// cout << possibility << endl;
+	return (possibility.at(0) == '2' || possibility.at(1) == '2');
+}
+
 size_t clk = 0;
 template<typename T>
-void follow(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const map<T, set<T>> adjList, const T start) {
+bool follow(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const map<T, set<T>> adjList, const T start) {
 	// if start is in visited
 	if (visited->find(start) != visited->end())
-		return;
+		return true;
 
 	visited->insert(start);
 
 	auto search = adjList.find(start);
 
 	pre->insert({start, clk++});
-	for (const auto point : search->second) {
-		follow(pre, post, visited, adjList, point);
+	bool go_on;
+	if (!isDestination(start)) {
+		for (const auto point : search->second) {
+			go_on = follow(pre, post, visited, adjList, point);
+			if (!go_on) {
+				break;
+			}
+		}
+	}
+	else {
+		cout << "destination! " << start << endl;
 	}
 	post->insert({start, clk++});
+	return go_on;
 }
 
 
@@ -110,6 +125,9 @@ map<T, long> walk_bfs(const map<T, set<T>> adjList, T start) {
 		current = q.front();
 		q.pop_front();
 		visited.insert(current);
+
+		if (isDestination(current))
+			break;
 
 		auto search = adjList.find(current);
 		if (search != adjList.end()) {
@@ -199,8 +217,7 @@ void print_bfs_results(const map<T, long> explored) {
 
 	// cout << "vertex: (pre, post)" << endl;
 	for (const auto point : explored) {
-		// if (point.first >= 0 && point.second >= 0)
-			cout << point.first << ": " << point.second << endl;
+		cout << point.first << ": " << point.second << endl;
 	}
 }
 

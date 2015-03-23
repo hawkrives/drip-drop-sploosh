@@ -41,12 +41,12 @@ def find_possibilities( num_set ):
   return set(possibilities)
 
 # print( numbers )
-print(start, 5812, 1956)
+print(start, 4711, 1956)
 for num_set in numbers:
   col1, col2, col3 = num_set
-  f = str(col1 + 1) + str(col2 + 1) + str(col3 + 1)
+  f = str(col1) + str(col2) + str(col3)
   for p in find_possibilities(num_set):
     p1, p2, p3 = p
-    t = str(p1 + 1) + str(p2 + 1) + str(p3 + 1)
+    t = str(p1) + str(p2) + str(p3)
     if f != t:
       print('e', f, t)

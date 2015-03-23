@@ -5,11 +5,8 @@ using std::string;
 #include "breadth-first-search.h"
 #include "common.h"
 
-void print_line() {
-	cout << endl << "-----" << endl << endl;
-}
-
 void print_header(std::string str) {
+	cout << endl << "-----" << endl << endl;
 	cout << str << endl;
 }
 
@@ -60,32 +57,28 @@ int main(int argc, const char* argv[]) {
 			adjList.insert({fromVertex, {toVertex}});
 		}
 	}
-	for (const auto vertex : adjList) {
-		for (const auto to : vertex.second) {
-			auto search = adjList.find(to);
-			if (search != adjList.end()) {
-				search->second.insert(vertex.first);
-			}
-			else {
-				adjList.insert({to, {vertex.first}});
-			}
-		}
-	}
+	// for (const auto vertex : adjList) {
+	// 	for (const auto to : vertex.second) {
+	// 		auto search = adjList.find(to);
+	// 		if (search != adjList.end()) {
+	// 			search->second.insert(vertex.first);
+	// 		}
+	// 		else {
+	// 			adjList.insert({to, {vertex.first}});
+	// 		}
+	// 	}
+	// }
 
 	print_header("printing dimacs file");
 	print_dimacs(adjList, numEdges);
 
-	print_line();
+	string start = "470";
 
 	print_header("DFS-ing the entire graph");
-	string start = "S";
 	map<string, pair<long, long>> explored_dfs = walk_dfs(adjList, start);
 	print_dfs_results(explored_dfs);
 
-	print_line();
-
 	print_header("BFS-ing the entire graph");
-	start = "S";
 	map<string, long> explored_bfs = walk_bfs(adjList, start);
 	print_bfs_results(explored_bfs);
 

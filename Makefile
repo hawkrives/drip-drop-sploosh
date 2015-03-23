@@ -16,7 +16,7 @@ bfs.out: bfs.cpp breadth-first-search.h common.h ostream.h utilities.h
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 bfs: bfs.out
-	./$< bfs-test.txt
+	./$< drippy.col
 
 
 clean:

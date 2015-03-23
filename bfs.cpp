@@ -25,7 +25,7 @@ int main(int argc, const char* argv[]) {
 
 	const vector<string> dimacs = split(s, " ");
 	const unsigned long numNodes = stoul(dimacs.at(2));
-	const unsigned long numEdges = stoul(dimacs.at(3));
+	// const unsigned long numEdges = stoul(dimacs.at(3));
 
 	vector<vector<string>> vertices;
 	vertices.reserve(numNodes);
@@ -57,29 +57,29 @@ int main(int argc, const char* argv[]) {
 			adjList.insert({fromVertex, {toVertex}});
 		}
 	}
-	// for (const auto vertex : adjList) {
-	// 	for (const auto to : vertex.second) {
-	// 		auto search = adjList.find(to);
-	// 		if (search != adjList.end()) {
-	// 			search->second.insert(vertex.first);
-	// 		}
-	// 		else {
-	// 			adjList.insert({to, {vertex.first}});
-	// 		}
-	// 	}
-	// }
+	for (const auto vertex : adjList) {
+		for (const auto to : vertex.second) {
+			auto search = adjList.find(to);
+			if (search != adjList.end()) {
+				search->second.insert(vertex.first);
+			}
+			else {
+				adjList.insert({to, {vertex.first}});
+			}
+		}
+	}
 
 	print_header("printing dimacs file");
-	print_dimacs(adjList, numEdges);
+	print_dimacs(adjList);
 
-	string start = "470";
+	string start = "S";
 
 	print_header("DFS-ing the entire graph");
 	map<string, pair<long, long>> explored_dfs = walk_dfs(adjList, start);
 	print_dfs_results(explored_dfs);
 
 	print_header("BFS-ing the entire graph");
-	map<string, long> explored_bfs = walk_bfs(adjList, start);
+	auto explored_bfs = walk_bfs(adjList, start);
 	print_bfs_results(explored_bfs);
 
 	// print_line();

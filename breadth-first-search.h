@@ -19,14 +19,16 @@ using std::string;
 using std::deque;
 #include <algorithm>
 using std::sort;
+#include <stack>
+using std::stack;
 
 #include "ostream.h"
 
 
-bool isDestination(string possibility) {
-	// cout << possibility << endl;
-	return (possibility.at(0) == '2' || possibility.at(1) == '2');
-}
+// bool isDestination(string possibility) {
+// 	// cout << possibility << endl;
+// 	return (possibility.at(0) == '2' || possibility.at(1) == '2');
+// }
 
 size_t clk = 0;
 template<typename T>
@@ -41,17 +43,17 @@ bool follow(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const ma
 
 	pre->insert({start, clk++});
 	bool go_on;
-	if (!isDestination(start)) {
+	// if (!isDestination(start)) {
 		for (const auto point : search->second) {
 			go_on = follow(pre, post, visited, adjList, point);
 			if (!go_on) {
 				break;
 			}
 		}
-	}
-	else {
-		cout << "destination! " << start << endl;
-	}
+	// }
+	// else {
+	// 	cout << "destination! " << start << endl;
+	// }
 	post->insert({start, clk++});
 	return go_on;
 }
@@ -118,7 +120,7 @@ map<T, long> walk_bfs(const map<T, set<T>> adjList, T start) {
 	distance.insert({start, 0});
 	deque<T> q;
 	q.push_back(start);
-	auto current = q.front();
+	T current;
 	while (q.size()) {
 		// cout << current << " " << q << endl;
 
@@ -126,8 +128,8 @@ map<T, long> walk_bfs(const map<T, set<T>> adjList, T start) {
 		q.pop_front();
 		visited.insert(current);
 
-		if (isDestination(current))
-			break;
+		// if (isDestination(current))
+		// 	break;
 
 		auto search = adjList.find(current);
 		if (search != adjList.end()) {
@@ -145,7 +147,7 @@ map<T, long> walk_bfs(const map<T, set<T>> adjList, T start) {
 		}
 	}
 
-	cout << distance << endl;
+	// cout << distance << endl;
 
 	return distance;
 }
@@ -181,7 +183,7 @@ size_t count_vertices(const map<T, set<T>> adjList) {
 }
 
 template<typename T>
-void print_dimacs(const map<T, set<T>> graph, size_t numEdges) {
+void print_dimacs(const map<T, set<T>> graph) {
 	cout << "p\t" << "edge\t" << count_vertices(graph) << "\t" << count_edges(graph) << endl;
 	for (const auto fromVertex : graph)
 		for (const auto toVertex : fromVertex.second)
@@ -216,9 +218,10 @@ void print_bfs_results(const map<T, long> explored) {
     // });
 
 	// cout << "vertex: (pre, post)" << endl;
-	for (const auto point : explored) {
-		cout << point.first << ": " << point.second << endl;
-	}
+	cout << explored << endl;
+	// for (const auto point : explored) {
+	// 	cout << point.first << ": " << point.second << endl;
+	// }
 }
 
 void check_dfs_results_for_buckets(const map<size_t, pair<long, long>> explored) {

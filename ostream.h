@@ -18,6 +18,18 @@ ostream& operator<< (ostream& out, const pair<T, U>& p) {
 }
 
 template<typename T>
+ostream& operator<< (ostream& out, stack<T>& s) {
+	vector<T> vec;
+	vec.reserve(s.size());
+	while (s.size()) {
+		vec.push_back(s.top());
+		s.pop();
+	}
+	out << vec;
+	return out;
+}
+
+template<typename T>
 ostream& operator<< (ostream& out, const vector<T>& vec) {
 	out << '[';
 	char comma[3] = {'\0', ' ', '\0'};
@@ -42,20 +54,6 @@ ostream& operator<< (ostream& out, const set<T>& s) {
 	out << ']';
 	return out;
 }
-
-template<typename T>
-ostream& operator<< (ostream& out, const deque<T>& s) {
-	out << '[';
-	char comma[3] = {'\0', ' ', '\0'};
-	for (const auto& item : s) {
-		out << comma;
-		out << item;
-		comma[0] = ',';
-	}
-	out << ']';
-	return out;
-}
-
 
 template<typename T, typename U>
 ostream& operator<< (ostream& out, const map<T, U>& map) {

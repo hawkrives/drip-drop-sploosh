@@ -1,0 +1,15 @@
+p	edge	6	14
+e	A	B
+e	A	S
+e	B	A
+e	B	C
+e	C	B
+e	C	S
+e	D	E
+e	D	S
+e	E	D
+e	E	S
+e	S	A
+e	S	C
+e	S	D
+e	S	E

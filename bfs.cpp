@@ -82,11 +82,11 @@ int main(int argc, const char* argv[]) {
 	map<string, pair<long, long>> explored_dfs = walk_dfs(adjList, start);
 	print_dfs_results(explored_dfs);
 
-	// print_line();
+	print_line();
 
-	// print_header("BFS-ing the entire graph");
-	// map<size_t, pair<long, long>> explored_bfs = explore_bfs(adjList);
-	// print_bfs_results(explored_bfs);
+	print_header("BFS-ing the entire graph");
+	map<string, long> explored_bfs = walk_bfs(adjList, start);
+	print_bfs_results(explored_bfs);
 
 	// print_line();
 

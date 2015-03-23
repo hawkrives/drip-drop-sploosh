@@ -94,73 +94,45 @@ map<T, pair<long, long>> explore_dfs(const map<T, set<T>> adjList) {
 
 
 template<typename T>
-void follow_bfs(map<T, size_t> *pre, map<T, size_t> *post, set<T> *visited, const map<T, set<T>> adjList, const T start) {
-	// if start is in visited
-	if (visited->find(start) != visited->end())
-		return;
-
-	visited->insert(start);
-
-	auto search = adjList.find(start);
-
-	pre->insert({start, clk++});
-	for (const auto point : search->second) {
-		follow(pre, post, visited, adjList, point);
-	}
-	post->insert({start, clk++});
-}
-
-
-template<typename T>
-map<T, pair<long, long>> walk_bfs(const map<T, set<T>> adjList, T start) {
-	map<T, size_t> pre;
-	map<T, size_t> post;
+map<T, long> walk_bfs(const map<T, set<T>> adjList, T start) {
+	map<T, long> distance;
 	set<T> visited;
 
-	// cout << adjList << endl;
+	distance.insert({start, 0});
+	queue<T> q;
+	q.push(start);
+	auto next = q.front();
+	while (q.size()) {
+		next = q.front();
+		q.pop();
+		for (const auto edge : adjList) {
+			auto search = distance.find(edge.first);
+			if (search != distance.end()){
+				auto val = search->first;
+				q.push(val);
+				try {
+					distance.at(val) = distance.at(edge.first) + 1;
+				} catch(...) {
+					distance.insert({val, distance.at(edge.first) + 1});
+				}
+			}
+		}
+	}
 
-	follow(&pre, &post, &visited, adjList, start);
-	clk = 0;
-
-	map<T, pair<long, long>> results;
+	map<T, long> results;
 	for (const auto point : visited) {
-		auto preSearch = pre.find(point);
-		auto postSearch = post.find(point);
+		auto distanceSearch = distance.find(point);
 
-		results.insert({point, {
-			(preSearch != pre.end()) ? preSearch->second : -1,
-			(postSearch != post.end()) ? postSearch->second : -1,
-		}});
+		results.insert({
+			point,
+			(distanceSearch != distance.end()) ? distanceSearch->second : -1,
+		});
 	}
 
 	return results;
 }
 
-
-template<typename T>
-map<T, pair<long, long>> explore_bfs(const map<T, set<T>> adjList) {
-	map<T, size_t> pre;
-	map<T, size_t> post;
-	set<T> visited;
-
-	for (const auto pair : adjList)
-		follow(&pre, &post, &visited, adjList, pair.first);
-	clk = 0;
-
-	map<T, pair<long, long>> results;
-	for (const auto point : visited) {
-		auto preSearch = pre.find(point);
-		auto postSearch = post.find(point);
-
-		results.insert({point, {
-			(preSearch != pre.end()) ? static_cast<long>(preSearch->second) : -1,
-			(postSearch != post.end()) ? static_cast<long>(postSearch->second) : -1,
-		}});
-	}
-
-	return results;
-}
-
+////////
 
 template<typename T>
 int sizeOfSet(pair<T, set<T>> first, pair<T, set<T>> second) {
@@ -215,18 +187,19 @@ void print_dfs_results(const map<T, pair<long, long>> explored) {
 	}
 }
 
-void print_bfs_results(const map<size_t, pair<long, long>> explored) {
-	vector<pair<size_t, pair<long, long>>> sorted;
-	for (const auto pair : explored)
-		sorted.push_back(pair);
-
-	std::sort(sorted.begin(), sorted.end(), [](pair<size_t, pair<long, long>> a, pair<size_t, pair<long, long>> b) {
-        return a.second.first < b.second.first;
-    });
+template<typename T>
+void print_bfs_results(const map<T, long> explored) {
+	// vector<pair<size_t, pair<long, long>>> sorted;
+	// for (const auto pair : explored)
+	// 	sorted.push_back(pair);
+	//
+	// std::sort(sorted.begin(), sorted.end(), [](pair<size_t, pair<long, long>> a, pair<size_t, pair<long, long>> b) {
+    //     return a.second.first < b.second.first;
+    // });
 
 	// cout << "vertex: (pre, post)" << endl;
-	for (const auto point : sorted) {
-		if (point.second.first >= 0 && point.second.second >= 0)
+	for (const auto point : explored) {
+		// if (point.first >= 0 && point.second >= 0)
 			cout << point.first << ": " << point.second << endl;
 	}
 }

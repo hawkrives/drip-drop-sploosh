@@ -116,7 +116,16 @@ map<T, pair<long, long>> explore_bfs(const map<T, vector<T>> adjList) {
 
 	for (const auto node : adjList)
 		for (const auto connection : node.second)
-			to_
+			to_visit.push(connection);
+
+	const auto next; = *to_visit.front;
+	while (next = *to_visit.front) {
+		to_visit.pop();
+
+	}
+	for (const auto node : to_visit) {
+
+	}
 	follow_bfs(&pre, &post, &visited, &to_visit, adjList, *adjList.begin().second);
 	clk = 0;
 
